@@ -1,0 +1,48 @@
+public class Test extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        Test r0;
+
+        r0 := @this: Test;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] r0;
+
+        r0 := @parameter0: java.lang.String[];
+
+        staticinvoke <Test: int test(int,int,int,int,int,int)>(10, 11, 25, 33, 43, 26);
+
+        return;
+    }
+
+    private static int test(int, int, int, int, int, int)
+    {
+        int i0, i1, i2, i3, i4, i5, i6, i7;
+
+        i1 := @parameter0: int;
+
+        i2 := @parameter1: int;
+
+        i0 := @parameter2: int;
+
+        i3 := @parameter3: int;
+
+        i4 := @parameter4: int;
+
+        i5 := @parameter5: int;
+
+        i6 = i2 + 1;
+
+        i7 = i6 * i0;
+
+        return i7;
+    }
+}

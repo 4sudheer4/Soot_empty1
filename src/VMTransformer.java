@@ -32,7 +32,6 @@ public class VMTransformer extends SceneTransformer {
                     System.out.println("yes, there is a static invoke");
                 } */
 
-
                 if (v instanceof Local) {
                     Local l = (Local) v; //stores ix versions of integers
                     int lno = l.getNumber();

@@ -14,26 +14,30 @@ public class VMTransformer extends SceneTransformer {
         SootClass mainClass = Scene.v().getMainClass(); // get main class
 
         System.out.println("Methods: " + mainClass.getMethodCount()); // get methods count for class
-        SootMethod testMethod = mainClass.getMethodByName("main"); // get method test from main class
+        SootMethod testMethod = mainClass.getMethodByName("test"); // get method test from main class
         Body methodBody = testMethod.retrieveActiveBody();// get method body as an object
         // Create directed-graph based on the method body
         //Unit u = methodBody.getUnits().getFirst();
 
         for (Unit ut : methodBody.getUnits()) {
             //List<ValueBox> defBoxes = ut.getDefBoxes();
-            System.out.println("units: " +ut);
-            for (ValueBox vb : ut.getUseBoxes()) {
+            System.out.println("units: " +ut); //printing how units looks like
+            for (ValueBox vb : ut.getDefBoxes()) {
                 Value v = vb.getValue();
-                System.out.println("Box Values: " + v);
-                if (v.toString().contains("staticinvoke"))
+                System.out.println("ValueBox Values: " + vb); //printing how value boxes looks like
+                System.out.println("Box Values: " + v.toString()); //printing values in a value box
+              /*  To check if there is any static invoke in main (Use getUseBoxes()
+              if (v.toString().contains("staticinvoke"))
                 {
                     System.out.println("yes, there is a static invoke");
-                }
+                } */
+
+
                 if (v instanceof Local) {
                     Local l = (Local) v; //stores ix versions of integers
                     int lno = l.getNumber();
 
-                    System.out.println("Box Values: " + v);
+                    System.out.println("Box Values1: " + lno); //this will print values but these doesn't seem right
                 }
             }
 

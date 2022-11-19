@@ -26,6 +26,7 @@ public class Main {
             Options.v().set_prepend_classpath(true); // prepend class path
             Options.v().set_src_prec(Options.src_prec_class); // process only .class files, change here to process other IR or class
             Options.v().set_output_format(Options.output_format_jimple); // output jimple format, change here to output other IR
+
             ArrayList<String> list = new ArrayList<>();
             list.add(classpath);
             Options.v().set_process_dir(list); // process all .class files in directory

@@ -1,0 +1,41 @@
+
+Methods: 2
+units: r11 := @parameter0: java.lang.String[]  //************public static void main(String args[])
+
+
+units: $r0 = new java.net.URL 
+
+units: specialinvoke $r0.<java.net.URL: void <init>(java.lang.String)>("http://www.google.com"). //***********URL url = new URL("http://www.google.com");
+
+
+
+
+units: r1 = $r0
+
+
+units: $r2 = virtualinvoke r1.<java.net.URL: java.net.URLConnection openConnection()>()  
+
+
+units: r3 = (java.net.HttpURLConnection) $r2       //*****************HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+
+
+
+
+units: virtualinvoke r3.<java.net.HttpURLConnection: void setRequestMethod(java.lang.String)>("GET")
+units: $r4 = new java.io.BufferedReader
+units: $r5 = new java.io.InputStreamReader
+units: $r6 = virtualinvoke r3.<java.net.HttpURLConnection: java.io.InputStream getInputStream()>()
+units: specialinvoke $r5.<java.io.InputStreamReader: void <init>(java.io.InputStream)>($r6)
+units: specialinvoke $r4.<java.io.BufferedReader: void <init>(java.io.Reader)>($r5)
+units: r7 = $r4
+units: $r8 = virtualinvoke r7.<java.io.BufferedReader: java.lang.String readLine()>()
+units: r9 = $r8
+units: if $r8 == null goto virtualinvoke r7.<java.io.BufferedReader: void close()>()
+units: $r10 = <java.lang.System: java.io.PrintStream out>
+units: virtualinvoke $r10.<java.io.PrintStream: void println(java.lang.String)>(r9)
+units: goto [?= $r8 = virtualinvoke r7.<java.io.BufferedReader: java.lang.String readLine()>()]
+units: virtualinvoke r7.<java.io.BufferedReader: void close()>()
+units: return
+
+Process finished with exit code 0

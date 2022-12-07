@@ -162,13 +162,12 @@ public class VM2Transformer extends SceneTransformer {
                         IterateOverListAndInsertLogMessage("" + App_Name + "::" + Hash + "::", StringArrayOfVirtualInvokeMethodsToLookForNotAdSpecific, LastKnownUnit, units, MethodName + ":", false);
                         IterateOverListAndInsertLogMessage(App_Name + "::" + Hash + "::", StringArrayOfVirtualInvokeMethodsToLookForAdSpecificMultipleTimesSearchFor, LastKnownUnit, units, MethodName + ":", false);
 */
-                    //    IterateOverListAndInsertLogMessage(App_Name + "::" + Hash + "::", StringArrayOfVirtualInvokeMethodsToLookForAdSpecific, LastKnownUnit, units, MethodName + ":", true);
+                        IterateOverListAndInsertLogMessage(App_Name + "::" + Hash + "::", StringArrayOfVirtualInvokeMethodsToLookForAdSpecific, LastKnownUnit, units, MethodName + ":", true);
 
 
                         if (StringLastKnownUnit.contains("java.net.URL: java.net.URLConnection openConnection()") || StringLastKnownUnit.contains("void loadAd(com.google.android.gms.ads.AdRequest)"))
-                        // if(StringLastKnownUnit.contains("void loadAd(com.google.android.gms.ads.admanager.AdManagerAdRequest)"))
                         {
-                            Print("FOUND LOADAD:" + MethodName);
+                            Print("FOUND LOAD METHOD:" + MethodName);
                             StringMethodToInvestigate = body.getMethod().getSignature().toString();
                             StringClassToInvestigate = body.getMethod().getDeclaringClass().toString();
                         }
@@ -183,7 +182,7 @@ public class VM2Transformer extends SceneTransformer {
                         SpecialInvokeExpression = (SpecialInvokeExpr) SootValue;
                         MethodName = SpecialInvokeExpression.getMethod().getName().toString();
 //                        IterateOverListAndInsertLogMessage(App_Name + "::" + Hash + "::", StringArrayOfSpecialInvokeMethodsToLookForAdSpecific, LastKnownUnit, units, MethodName + ":", true);
-//                        IterateOverListAndInsertLogMessage(App_Name + "::" + Hash + "::", StringArrayOfSpecialInvokeMethodsToLookForAdSpecificMultipleTimesSearchFor, LastKnownUnit, units, MethodName, false);
+                        IterateOverListAndInsertLogMessage(App_Name + "::" + Hash + "::", StringArrayOfSpecialInvokeMethodsToLookForAdSpecificMultipleTimesSearchFor, LastKnownUnit, units, MethodName, false);
 //                        IterateOverListAndInsertLogMessage(App_Name + "::" + Hash + "::" + "", StringArrayOfSpecialInvokeMethodsToLookForNotAdSpecific, LastKnownUnit, units, MethodName + ":", false);
                     }
                 }
@@ -201,10 +200,10 @@ public class VM2Transformer extends SceneTransformer {
                 String Message = MethodName + ":" + LastKnownUnit.toString();
                 Local local = localDef(LastKnownUnit);
                 if(local != null){
-                  //  InsertLogMessageAfterUnit(InputMsg + Message +"---Memory Location of "+local.toString()+" is "+ VM.current().addressOf(local), LastKnownUnit, units);
+                    InsertLogMessageAfterUnit(InputMsg + Message +"---Memory Location of "+local.toString()+" is "+ VM.current().addressOf(local), LastKnownUnit, units);
                     local = null;
                 }else{
-                   // InsertLogMessageAfterUnit(InputMsg + Message+"---null", LastKnownUnit, units);
+                    InsertLogMessageAfterUnit(InputMsg + Message+"---null", LastKnownUnit, units);
                 }
             }
             if(LastKnownUnit.toString().contains(StringMethod) & AdSpecific)
@@ -215,14 +214,55 @@ public class VM2Transformer extends SceneTransformer {
                     MethodsFoundArray.add(StringMethod);
                     Local local = localDef(LastKnownUnit);
                     if(local != null){
-                       // InsertLogMessageAfterUnit(InputMsg + Message +"---Memory Location of "+local.toString()+" is "+ VM.current().addressOf(local), LastKnownUnit, units);
+                        InsertLogMessageAfterUnit(InputMsg + Message +"---Memory Location of "+local.toString()+" is "+ VM.current().addressOf(local), LastKnownUnit, units);
                         local = null;
                     }else{
-                        //InsertLogMessageAfterUnit(InputMsg + Message+"---null", LastKnownUnit, units);
+                        InsertLogMessageAfterUnit(InputMsg + Message+"---null", LastKnownUnit, units);
                     }
                 }
             }
         }
+    }
+
+    public static void InsertLogMessageAfterUnit(String Message, Unit LastKnownUnit, UnitPatchingChain units)
+    {
+        List<Value> listArgs = new ArrayList<Value>();
+        listArgs.add(StringConstant.v("FiniteState"));
+        listArgs.add(StringConstant.v(Message));
+
+        SootClass mainClass = Scene.v().getMainClass(); // get main class
+
+        //StaticInvokeExpr SM = Jimple.v().newStaticInvokeExpr(Scene.v().getMainClass().getMethodByName("main").makeRef(), listArgs);
+
+        //System.out.println(SM);
+
+        StaticInvokeExpr LogInvokeStmt = Jimple.v().newStaticInvokeExpr(Scene.v().getMainClass().getMethodByName("main").makeRef(), listArgs);
+        InvokeStmt InvokeStatementLog = Jimple.v().newInvokeStmt(LogInvokeStmt);
+        String stringInvokeStatementLog = InvokeStatementLog.toString();
+        Print("Message:"+Message);
+        // if(!stringInvokeStatementLog.contains("findView")){
+        Print("static invoke In insert Log after unit ******" + stringInvokeStatementLog);
+        // }
+        String stringLastAdUnitInserted = InvokeStatementLog.toString();
+        Print("LastKnownUnit TEST:"+LastKnownUnit.toString()+"\nNew Unit:"+InvokeStatementLog.toString());
+        int intStringAdUnitsInsertedSize= stringAdUnitsInserted.size()-1;
+        System.out.println("string units inserted"+intStringAdUnitsInsertedSize);
+        if(intStringAdUnitsInsertedSize > 0){
+            if(!stringLastAdUnitInserted.contains(stringAdUnitsInserted.get(stringAdUnitsInserted.size()-1))){
+                stringAdUnitsInserted.add(new String(Message));
+                units.insertAfter(InvokeStatementLog, LastKnownUnit);
+                if(InvokeStatementLog.toString().contains("ADRELATED")){
+                    Print("Injecting"+InvokeStatementLog.toString());
+                }
+            }
+        }else{
+            stringAdUnitsInserted.add(new String(stringInvokeStatementLog.toString()));
+            units.insertAfter(InvokeStatementLog, LastKnownUnit);
+            Print("LastKnownUNIT:"+LastKnownUnit);
+            Print("Injecting"+InvokeStatementLog.toString());
+        }
+
+        // units.insertAfter(InvokeStatementLog, LastKnownUnit);
     }
     public static AssignStmt newAssignStmt(Value variable, Value rightvalue)
     {

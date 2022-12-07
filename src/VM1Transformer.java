@@ -3,11 +3,12 @@ import soot.jimple.*;
 import soot.toolkits.graph.BriefUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 import conditions.SootConditionChecker;
+import Soot.SootUtil;
 import java.util.*;
 import java.util.Iterator;
 import java.util.*;
 import conditions.SootConditionChecker;
-
+import Soot.SootUtil;
 import soot.*;
 import soot.Value;
 import soot.jimple.*;
@@ -47,6 +48,12 @@ public class VM1Transformer extends SceneTransformer {
         SootMethod testMethod = mainClass.getMethodByName("main"); // get method test from main class
         Body methodBody = testMethod.retrieveActiveBody();// get method body as an object
 
+
+
+        //creating sootutil object
+
+        SootUtil sootUtil = new SootUtil();
+
         StaticInvokeExpr StaticInvokeExpression = null;
         String MethodName = null;
         UnitPatchingChain units = methodBody.getUnits();
@@ -74,7 +81,7 @@ public class VM1Transformer extends SceneTransformer {
                     boolean SootValueIsAStaticInvokeExpr = sootconditionchecker.ValueIsAStaticInvokeExpr(v);
 
                     if (SootValueIsAStaticInvokeExpr) {
-                        System.out.println("there is a static invoke");
+                        System.out.println("there is a static invoke_____");
                     }
 
                     //getting which method the Main is invoking
@@ -83,7 +90,7 @@ public class VM1Transformer extends SceneTransformer {
                         StaticInvokeExpression = (StaticInvokeExpr) v;
                         MethodName = StaticInvokeExpression.getMethod().getName().toString();
                         System.out.println("calling static invoke method name is: " + MethodName);
-                        IterateOverListAndInsertLogMessage("", StringArrayOfStaticInvokeMethodsToLookForAdSpecific, ut, units, MethodName, true);
+                        sootUtil.IterateOverListAndInsertLogMessage("", StringArrayOfStaticInvokeMethodsToLookForAdSpecific, ut, units, MethodName, true);
                     }
 
 
@@ -91,72 +98,9 @@ public class VM1Transformer extends SceneTransformer {
             }
         }
     }
-    private static void IterateOverListAndInsertLogMessage(String InputMsg, String[] ArrayOfStatements, Unit LastKnownUnit, UnitPatchingChain units, String MethodName, boolean AdSpecific)
-    {
 
-        //for (String StringMethod : ArrayOfStatements)
-        //{
-            //if(LastKnownUnit.toString().contains(StringMethod) & !AdSpecific)
-           // {
-                String Message = MethodName + ":" + LastKnownUnit.toString();
-                Local local = localDef(LastKnownUnit);
-                if(local != null){
-                    System.out.println(InputMsg + Message +"---Memory Location of "+local.toString()+" is "+ VM.current().addressOf(local));
 
-                    // InsertLogMessageAfterUnit(InputMsg + Message +"---Memory Location of "+local.toString()+" is "+ VM.current().addressOf(local), LastKnownUnit, units);
-                    local = null;
-                }else{
-                   // InsertLogMessageAfterUnit(InputMsg + Message+"---null", LastKnownUnit, units);
-                }
-           // }
-           /* if(LastKnownUnit.toString().contains(StringMethod) & AdSpecific)
-            {
-                String Message = MethodName + ":" + LastKnownUnit.toString();
-                if(!MethodsFoundArray.contains(StringMethod))
-                {
-                    MethodsFoundArray.add(StringMethod);
-                    Local local = localDef(LastKnownUnit);
-                    if(local != null){
-                        InsertLogMessageAfterUnit(InputMsg + Message +"---Memory Location of "+local.toString()+" is "+ VM.current().addressOf(local), LastKnownUnit, units);
-                        local = null;
-                    }else{
-                        InsertLogMessageAfterUnit(InputMsg + Message+"---null", LastKnownUnit, units);
-                    }
-                }
-            } */
-        //}
-    }
-    public static void InsertLogMessageAfterUnit(String Message, Unit LastKnownUnit, UnitPatchingChain units)
-    {
-        List<Value> listArgs = new ArrayList<Value>();
-        listArgs.add(StringConstant.v("FiniteState"));
-        listArgs.add(StringConstant.v(Message));
-        StaticInvokeExpr LogInvokeStmt = Jimple.v().newStaticInvokeExpr(Scene.v().getMethod("test").makeRef(), listArgs);
-        InvokeStmt InvokeStatementLog = Jimple.v().newInvokeStmt(LogInvokeStmt);
-        String stringInvokeStatementLog = InvokeStatementLog.toString();
-        // Print("Message:"+Message);
-        // if(!stringInvokeStatementLog.contains("findView")){
-        System.out.println(stringInvokeStatementLog);
-        // }
-        String stringLastAdUnitInserted = InvokeStatementLog.toString();
-        // Print("LastKnownUnit TEST:"+LastKnownUnit.toString()+"\nNew Unit:"+InvokeStatementLog.toString());
-        int intStringAdUnitsInsertedSize= stringAdUnitsInserted.size()-1;
 
-        if(intStringAdUnitsInsertedSize > 0){
-            if(!stringLastAdUnitInserted.contains(stringAdUnitsInserted.get(stringAdUnitsInserted.size()-1))){
-                stringAdUnitsInserted.add(new String(Message));
-                units.insertAfter(InvokeStatementLog, LastKnownUnit);
-                if(InvokeStatementLog.toString().contains("ADRELATED")){
-                    System.out.println("Injecting"+InvokeStatementLog.toString());
-                }
-            }
-        }else{
-            stringAdUnitsInserted.add(new String(stringInvokeStatementLog.toString()));
-            units.insertAfter(InvokeStatementLog, LastKnownUnit);
-        }
-
-        // units.insertAfter(InvokeStatementLog, LastKnownUnit);
-    }
     private static Local localDef(Unit u) {
         List<ValueBox> defBoxes = u.getDefBoxes();
         int size = defBoxes.size();

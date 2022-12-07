@@ -14,7 +14,7 @@ public class VMTransformer extends SceneTransformer {
         SootClass mainClass = Scene.v().getMainClass(); // get main class
         SootConditionChecker sootconditionchecker = new SootConditionChecker();
         System.out.println("Methods: " + mainClass.getMethodCount()); // get methods count for class
-        SootMethod testMethod = mainClass.getMethodByName("test"); // get method test from main class
+        SootMethod testMethod = mainClass.getMethodByName("main"); // get method test from main class
         Body methodBody = testMethod.retrieveActiveBody();// get method body as an object
         // Create directed-graph based on the method body
         //Unit u = methodBody.getUnits().getFirst();

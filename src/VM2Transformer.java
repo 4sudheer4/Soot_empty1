@@ -49,7 +49,7 @@ public class VM2Transformer extends SceneTransformer {
 
     private static String[] StringArrayOfSpecialInvokeMethodsToLookForAdSpecificMultipleTimesSearchFor = {"java.net.URL: void <init>(java.lang.String)"};
 
-    private static String[] StringArrayOfVirtualInvokeMethodsToLookForAdSpecific = {"java.net.URL: java.net.URLConnection openConnection()", "com.google.android.gms.ads.interstitial.InterstitialAd: void show(android.app.Activity)", "com.google.android.gms.ads.AdView: void loadAd(com.google.android.gms.ads.AdRequest)", "com.google.android.gms.ads.AdView: void setAdUnitId(java.lang.String)"};
+    private static String[] StringArrayOfVirtualInvokeMethodsToLookForAdSpecific = {"java.net.URL: java.net.URLConnection openConnection()","java.net.HttpURLConnection: void setRequestMethod(java.lang.String)", "com.google.android.gms.ads.interstitial.InterstitialAd: void show(android.app.Activity)", "com.google.android.gms.ads.AdView: void loadAd(com.google.android.gms.ads.AdRequest)", "com.google.android.gms.ads.AdView: void setAdUnitId(java.lang.String)"};
 
 
     @Override
@@ -166,6 +166,12 @@ public class VM2Transformer extends SceneTransformer {
 
 
                         if (StringLastKnownUnit.contains("java.net.URL: java.net.URLConnection openConnection()") || StringLastKnownUnit.contains("void loadAd(com.google.android.gms.ads.AdRequest)"))
+                        {
+                            Print("FOUND LOAD METHOD:" + MethodName);
+                            StringMethodToInvestigate = body.getMethod().getSignature().toString();
+                            StringClassToInvestigate = body.getMethod().getDeclaringClass().toString();
+                        }
+                        if (StringLastKnownUnit.contains("java.net.HttpURLConnection: void setRequestMethod(java.lang.String)") || StringLastKnownUnit.contains("void loadAd(com.google.android.gms.ads.AdRequest)"))
                         {
                             Print("FOUND LOAD METHOD:" + MethodName);
                             StringMethodToInvestigate = body.getMethod().getSignature().toString();

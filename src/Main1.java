@@ -17,11 +17,12 @@ public class Main1 {
         VMTransformer mVMTransformer = new VMTransformer();
 
 
-        Transform mVMTransform = new Transform("wjtp.valNumbering", mVMTransformer);
+        Transform mVMTransform = new Transform("wjtp.malware", mVMTransformer);
         PackManager.v().getPack("wjtp").add(mVMTransform);
 
 
-        PackManager.v().runPacks();  // process and build call graph
+        PackManager.v().runPacks();  // process and inject
+        PackManager.v().writeOutput();
     }
 
     public static void configureSoot(String classpath) {

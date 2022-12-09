@@ -13,11 +13,11 @@ public class Main2 {
         VM1Transformer mVM1Transformer = new VM1Transformer();
 
 
-        Transform mVM1Transform = new Transform("wjtp.valNumbering", mVM1Transformer);
+        Transform mVM1Transform = new Transform("wjtp.Malware", mVM1Transformer);
         PackManager.v().getPack("wjtp").add(mVM1Transform);
 
 
-        PackManager.v().runPacks();  // process and build call graph
+        PackManager.v().runPacks();  // process and injects log
     }
 
     public static void configureSoot(String classpath) {

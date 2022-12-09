@@ -15,11 +15,12 @@ public class Main3 {
         VM2Transformer mVM2Transformer = new VM2Transformer();
 
 
-        Transform mVM2Transform = new Transform("wjtp.valNumbering", mVM2Transformer);
+        Transform mVM2Transform = new Transform("wjtp.Malware", mVM2Transformer);
         PackManager.v().getPack("wjtp").add(mVM2Transform);
 
 
         PackManager.v().runPacks();  // process and build call graph
+        PackManager.v().writeOutput();
     }
 
     public static void configureSoot(String classpath) {
@@ -27,7 +28,8 @@ public class Main3 {
         Options.v().set_allow_phantom_refs(true); // load phantom references
         Options.v().set_prepend_classpath(true); // prepend class path
         Options.v().set_src_prec(Options.src_prec_class); // process only .class files, change here to process other IR or class
-        Options.v().set_output_format(Options.output_format_jimple); // output jimple format, change here to output other IR
+        //Options.v().set_output_format(Options.output_format_jimple); // output jimple format, change here to output other IR
+        Options.v().set_output_format(1);
         ArrayList<String> list = new ArrayList<>();
         list.add(classpath);
         Options.v().set_process_dir(list); // process all .class files in directory

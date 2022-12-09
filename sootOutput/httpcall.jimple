@@ -1,0 +1,71 @@
+public class httpcall extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        httpcall r0;
+
+        r0 := @this: httpcall;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void main(java.lang.String[]) throws java.io.IOException
+    {
+        java.net.URL $r0;
+        java.net.URLConnection $r2;
+        java.net.HttpURLConnection r3;
+        java.io.BufferedReader $r4;
+        java.io.InputStreamReader $r5;
+        java.io.InputStream $r6;
+        java.lang.String $r8;
+        java.io.PrintStream $r10;
+        java.lang.String[] r11;
+
+        r11 := @parameter0: java.lang.String[];
+
+        $r0 = new java.net.URL;
+
+        specialinvoke $r0.<java.net.URL: void <init>(java.lang.String)>("http://www.google.com");
+
+        staticinvoke <httpcall: void main(java.lang.String[])>("FiniteState", "http call::hash::<init>:specialinvoke $r0.<java.net.URL: void <init>(java.lang.String)>(\"http://www.google.com\")---null");
+
+        $r2 = virtualinvoke $r0.<java.net.URL: java.net.URLConnection openConnection()>();
+
+        staticinvoke <httpcall: void main(java.lang.String[])>("FiniteState", "http call::hash::openConnection::$r2 = virtualinvoke r1.<java.net.URL: java.net.URLConnection openConnection()>()---Memory Location of $r2 is 29045080200");
+
+        r3 = (java.net.HttpURLConnection) $r2;
+
+        virtualinvoke r3.<java.net.HttpURLConnection: void setRequestMethod(java.lang.String)>("GET");
+
+        staticinvoke <httpcall: void main(java.lang.String[])>("FiniteState", "http call::hash::setRequestMethod::virtualinvoke r3.<java.net.HttpURLConnection: void setRequestMethod(java.lang.String)>(\"GET\")---null");
+
+        $r4 = new java.io.BufferedReader;
+
+        $r5 = new java.io.InputStreamReader;
+
+        $r6 = virtualinvoke r3.<java.net.HttpURLConnection: java.io.InputStream getInputStream()>();
+
+        specialinvoke $r5.<java.io.InputStreamReader: void <init>(java.io.InputStream)>($r6);
+
+        specialinvoke $r4.<java.io.BufferedReader: void <init>(java.io.Reader)>($r5);
+
+     label1:
+        $r8 = virtualinvoke $r4.<java.io.BufferedReader: java.lang.String readLine()>();
+
+        if $r8 == null goto label2;
+
+        $r10 = <java.lang.System: java.io.PrintStream out>;
+
+        virtualinvoke $r10.<java.io.PrintStream: void println(java.lang.String)>($r8);
+
+        goto label1;
+
+     label2:
+        virtualinvoke $r4.<java.io.BufferedReader: void close()>();
+
+        return;
+    }
+}

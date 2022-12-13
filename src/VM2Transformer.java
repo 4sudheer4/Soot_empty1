@@ -118,24 +118,12 @@ public class VM2Transformer extends SceneTransformer {
         System.out.println(stringvalue);
     }
 
+    //run through units to understand whether if the methods calls are in the set we are interested in
     public static void IterateOverUnitsandInjectAdSpecificCalls(Body body, String App_Name, String Hash) {
         SootConditionChecker sootconditionchecker = new SootConditionChecker();
         UnitPatchingChain units = body.getUnits();
         String MethodNameOfInterst = null;
-/*
-        if (runOnce) {
-            for (Local local : body.getLocals()) {
-                // if (local.getName().equals(name)) {
-                if (local.getType().toString().contains("com.google.android.gms.ads.admanager.AdManagerAdView")) {
-                    // Print("Locals:"+local.getType().toString());
-                    // Print("IterateOverUnitsandInjectAdSpecificCalls TESTING:"+body.getClass().toString());
-                    hasAdListener = true;
-                    runOnce = false;
-                }
-            }
-        }
-*/
-        // List<Local> localList = new ArrayList<Local>();
+
         for (Iterator<Unit> unit = units.snapshotIterator(); unit.hasNext(); ) {
             Unit LastKnownUnit = unit.next();
             String StringLastKnownUnit = LastKnownUnit.toString();
@@ -196,6 +184,7 @@ public class VM2Transformer extends SceneTransformer {
         }
     }
 
+    //we pass units that we are interested, in the above code and fetch memory location of them along with building a log message which can be used to insert.
     private static void IterateOverListAndInsertLogMessage(String InputMsg, String[] ArrayOfStatements, Unit LastKnownUnit, UnitPatchingChain units, String MethodName, boolean AdSpecific)
     {
 
@@ -229,7 +218,7 @@ public class VM2Transformer extends SceneTransformer {
             }
         }
     }
-
+    //this method will help you insert above generated logs after the units we are interested in.
     public static void InsertLogMessageAfterUnit(String Message, Unit LastKnownUnit, UnitPatchingChain units)
     {
         List<Value> listArgs = new ArrayList<Value>();

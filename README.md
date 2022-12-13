@@ -1,5 +1,18 @@
-# Soot_empty1
+# Soot_empty
 
+
+Dependencies needed: Add soot_jar_dependencies and jol_1.6 jar files (which helps with soot classes and fetching memory locations respectively) under project structure, if you are running on IntelliJ. (added jar files under soot_empty folder)
+Running java programs on 1.8 SDK since JavaSDK7 or above aren't compatible.
+
+
+Execution steps:
+
+1.Execute Main3.java which will be invoking an VM2Transformer.java object on .class file provided in "inputs" folder.
+2.This .class file is an executable of httpcall.java program.
+3.The resultant .jimple is stored in sootOutput folder
+
+
+Brief summary on learnings:
 
 •	In case you don’t know yet, Jimple is Soot’s primary intermediate representation, a three-address code that is basically a sort of simplified version of Java that only requires around 15 different kinds of statements. You can instruct Soot to convert .java or .class files to .jimple files or the other hand around. You can even have Soot generate .jimple from .java, modify the .jimple with a normal text editor and then convert your .jimple to .class, virtually hand-optimizing your program. But we are getting off-track here...
 
@@ -20,19 +33,6 @@ java -cp soot-4.3.0-jar-with-dependencies.jar  soot.Main -cp . -pp Main
 java -cp soot-4.3.0-jar-with-dependencies.jar  soot.Main -cp . -pp -f jimple Main
 
 •	This seems to have worked. Soot successfully processed the two .java files and placed resulting .class files into the sootOutput folder. Note that in general, Soot will process all classes you name on the command line and all classes referenced by those classes.
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -61,28 +61,6 @@ o	Perform store load on naïve stack code.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
- 
-
- 
 
 Where ut.getUseBoxes() returns list of value boxes corresponding to all values which get used in unit.
 

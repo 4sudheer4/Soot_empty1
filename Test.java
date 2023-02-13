@@ -1,17 +1,15 @@
+
 public class Test {
     public static void main(String[] args) {
-        int k = test(10, 11, 25, 33, 43,26);
+        int x, y, z;
+        x = 10;
+        while (x > 1) {
+            y = x/2;
+            if (y > 3) x = x - y;
+            z = x - 4;
+            if (z > 0) x = x/2;
+            z = z - 1;
+        }
+        System.out.println(x);
     }
-
-    private static int test(int a, int b, int c, int d, int e, int f) {
-
-        x = ""
-        a = b * c;
-        d = b;
-        b = b +1;
-        e = d * c;
-        f = b * c;
-        return f;
-    }
-
 }

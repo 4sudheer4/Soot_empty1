@@ -30,17 +30,11 @@ public class httpcall extends java.lang.Object
 
         specialinvoke $r0.<java.net.URL: void <init>(java.lang.String)>("http://www.google.com");
 
-        staticinvoke <httpcall: void main(java.lang.String[])>("FiniteState", "http call::hash::<init>:specialinvoke $r0.<java.net.URL: void <init>(java.lang.String)>(\"http://www.google.com\")---null");
-
         $r2 = virtualinvoke $r0.<java.net.URL: java.net.URLConnection openConnection()>();
-
-        staticinvoke <httpcall: void main(java.lang.String[])>("FiniteState", "http call::hash::openConnection::$r2 = virtualinvoke r1.<java.net.URL: java.net.URLConnection openConnection()>()---Memory Location of $r2 is 29066387952");
 
         r3 = (java.net.HttpURLConnection) $r2;
 
         virtualinvoke r3.<java.net.HttpURLConnection: void setRequestMethod(java.lang.String)>("GET");
-
-        staticinvoke <httpcall: void main(java.lang.String[])>("FiniteState", "http call::hash::setRequestMethod::virtualinvoke r3.<java.net.HttpURLConnection: void setRequestMethod(java.lang.String)>(\"GET\")---null");
 
         $r4 = new java.io.BufferedReader;
 

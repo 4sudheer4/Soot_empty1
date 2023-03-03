@@ -2,6 +2,7 @@ import soot.*;
 import soot.jimple.*;
 import soot.toolkits.graph.BriefUnitGraph;
 import soot.toolkits.graph.ExceptionalUnitGraph;
+import soot.toolkits.graph.InverseGraph;
 import soot.toolkits.graph.UnitGraph;
 import conditions.SootConditionChecker;
 import java.util.*;
@@ -12,6 +13,8 @@ import Soot.SootUtil;
 import soot.*;
 import soot.Value;
 import soot.jimple.*;
+import soot.toolkits.scalar.FlowAnalysis;
+import soot.toolkits.scalar.ForwardFlowAnalysis;
 import soot.toolkits.scalar.SimpleLiveLocals;
 import soot.util.*;
 import soot.options.Options;
@@ -35,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import org.openjdk.jol.vm.VM;
 
-public class VM4Transformer extends SceneTransformer {
+public class MyFFTransformer extends SceneTransformer {
 
     public static ArrayList<String> stringAdUnitsInserted = new ArrayList<>();
     private static final List<String> MethodsFoundArray = new ArrayList<String>();
@@ -62,48 +65,27 @@ public class VM4Transformer extends SceneTransformer {
         System.out.println("Methods: " + mainClass.getMethodCount()); // get methods count for class
         SootMethod m = mainClass.getMethodByName("test"); // get method test from main class
 
-        Body methodBody = m.retrieveActiveBody();// get method body as an object
-
-        JimpleBody body = (JimpleBody) m.retrieveActiveBody();// get jimple method body as an object
-
-
-        Body b = methodBody;
+        Body b = m.retrieveActiveBody();// get method body as an object
 
         System.out.println("=======================================");
-        System.out.println(m.getName());
+        System.out.println(m.toString());
 
         UnitGraph graph = new ExceptionalUnitGraph(b);
-        SimpleLiveLocals sll = new SimpleLiveLocals(graph);
+//        InverseGraph graph = new InverseGraph(graph);
+        MyForwardFlowAnalysis flowAnalysis = new MyForwardFlowAnalysis(graph);
 
+//        // get the units in the method
+//        List<Unit> units = graph.getHeads();
+
+        // print IN and OUT sets for each statement
         for (Unit u : graph) {
-            List<Local> before = sll.getLiveLocalsBefore(u);
-            List<Local> after = sll.getLiveLocalsAfter(u);
-            UnitPrinter up = new NormalUnitPrinter(b);
-            up.setIndent("");
-
-            System.out.println("---------------------------------------");
-            u.toString(up);
-            System.out.println(up.output());
-            System.out.print("Live in: {");
-            sep = "";
-            for (Local l : before) {
-                System.out.print(sep);
-                System.out.print(l.getName() + ": " + l.getType());
-                sep = ", ";
-            }
-            System.out.println("}");
-            System.out.print("Live out: {");
-            sep = "";
-            for (Local l : after) {
-                System.out.print(sep);
-                System.out.print(l.getName() + ": " + l.getType());
-                sep = ", ";
-            }
-            System.out.println("}");
-            System.out.println("---------------------------------------");
+            System.out.println("Statement: " + u.toString());
+            System.out.println("IN Set: " + flowAnalysis.getFlowBefore(u).toString());
+            System.out.println("OUT Set: " + flowAnalysis.getFlowAfter(u).toString());
+            System.out.println();
         }
+
         System.out.println("=======================================");
-
-
     }
+
 }

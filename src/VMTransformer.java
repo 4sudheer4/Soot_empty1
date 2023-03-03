@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 public class VMTransformer extends SceneTransformer {
 
     @Override
@@ -15,7 +14,7 @@ public class VMTransformer extends SceneTransformer {
         SootClass mainClass = Scene.v().getMainClass(); // get main class
         SootConditionChecker sootconditionchecker = new SootConditionChecker();
         System.out.println("Methods: " + mainClass.getMethodCount()); // get methods count for class
-        SootMethod testMethod = mainClass.getMethodByName("main"); // get method test from main class
+        SootMethod testMethod = mainClass.getMethodByName("test"); // get method test from main class
         Body methodBody = testMethod.retrieveActiveBody();// get method body as an object
         // Create directed-graph based on the method body
         //Unit u = methodBody.getUnits().getFirst();
@@ -23,6 +22,8 @@ public class VMTransformer extends SceneTransformer {
         for (Unit ut : methodBody.getUnits()) {
             //List<ValueBox> defBoxes = ut.getDefBoxes();
             System.out.println("units: " +ut); //printing how units looks like
+
+
             Stmt s = (Stmt) ut;
             if (s.containsInvokeExpr()) {
                 InvokeExpr ie = s.getInvokeExpr();
@@ -39,12 +40,37 @@ public class VMTransformer extends SceneTransformer {
                     }
                 } */
             }
-            for (ValueBox vb : ut.getDefBoxes()) {
+//            for (ValueBox vb : ut.getUseBoxes()) {
+//                System.out.println("ValueBox: " + vb);
+//                Value v = vb.getValue();
+//                System.out.println("Values: " + v);
+//            }
+
+            for (ValueBox vb : ut.getUseBoxes()) {
                 Value v = vb.getValue();
-                System.out.println("ValueBox Values: " + vb); //printing how value boxes looks like
-                System.out.println("Box Values: " + v.toString()); //printing values in a value box
+                if (v instanceof BinopExpr) {
+                    System.out.println("ValueBox Values is binary: " + vb);
+                    Value leftOp = ((AssignStmt) ut).getLeftOp();
+                    System.out.println("Values for left");
+                    System.out.println(leftOp);
+
+
+                }
+                else {
+                    System.out.println("ValueBox Values is NOT binary: " + vb); //printing how value boxes looks like
+                    if (v instanceof Local)
+                        System.out.println("Value for right: " + v);
+
+                    //System.out.println("Box Values: " + v); //printing values in a value box
+                }
+
+
+
                 //To check if there is any static invoke in main (Use getUseBoxes()
-              if (v.toString().contains("staticinvoke"))
+
+
+
+                if (v.toString().contains("staticinvoke"))
                 {
                     System.out.println("yes, there is a static invoke");
                 }
@@ -56,6 +82,7 @@ public class VMTransformer extends SceneTransformer {
                     System.out.println("Box Values1: " + lno); //this will print values but these doesn't seem right
                 }
             }
+
 
  /*           int size = defBoxes.size();
             if (size == 0) {

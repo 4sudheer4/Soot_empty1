@@ -6,7 +6,7 @@ import soot.options.Options;
 
 import java.util.ArrayList;
 
-public class Main5 {
+public class MyFFMain {
 
     public static void main(String[] args) {
 
@@ -15,11 +15,11 @@ public class Main5 {
         String classPath = "inputs";
         configureSoot(classPath);// configure soot
         Scene.v().loadNecessaryClasses(); // load all the library and dependencies for given program
-        VM5Transformer mVM5Transformer = new VM5Transformer();
+        MyFFTransformer mMyFFTransformer = new MyFFTransformer();
 
 
-        Transform mVM5Transform = new Transform("wjtp.Malware", mVM5Transformer);
-        PackManager.v().getPack("wjtp").add(mVM5Transform);
+        Transform mMyFFTransform = new Transform("wjtp.Malware", mMyFFTransformer);
+        PackManager.v().getPack("wjtp").add(mMyFFTransform);
 
 
         PackManager.v().runPacks();  // process and build call graph

@@ -63,29 +63,62 @@ public class MyBFTransformer extends SceneTransformer {
         SootClass mainClass = Scene.v().getMainClass(); // get main class
         SootConditionChecker sootconditionchecker = new SootConditionChecker();
         System.out.println("Methods: " + mainClass.getMethodCount()); // get methods count for class
-        SootMethod m = mainClass.getMethodByName("test"); // get method test from main class
 
-        Body b = m.retrieveActiveBody();// get method body as an object
+        Map<String,String> InSet = new HashMap<>();
+        Map<String,String> OutSet = new HashMap<>();
 
-        System.out.println("=======================================");
-        System.out.println(m.toString());
+        //To be built: 'FOR' loop to run the below for all the method calls.
 
-        UnitGraph graph = new ExceptionalUnitGraph(b);
-//        InverseGraph graph = new InverseGraph(graph);
-        MyBackwardFlowAnalysis flowAnalysis = new MyBackwardFlowAnalysis(graph);
+            SootMethod m = mainClass.getMethodByName("test"); // get method test from main class
 
-//        // get the units in the method
-//        List<Unit> units = graph.getHeads();
+            Body b = m.retrieveActiveBody();// get method body as an object
 
-        // print IN and OUT sets for each statement
-        for (Unit u : graph) {
-            System.out.println("Statement: " + u.toString());
-            System.out.println("IN Set: " + flowAnalysis.getFlowBefore(u).toString());
-            System.out.println("OUT Set: " + flowAnalysis.getFlowAfter(u).toString());
-            System.out.println();
-        }
+            System.out.println("=======================================");
+            System.out.println(m.toString());
 
-        System.out.println("=======================================");
+            UnitGraph graph = new ExceptionalUnitGraph(b);
+            MyBackwardFlowAnalysis flowAnalysis = new MyBackwardFlowAnalysis(graph);
+
+            // get the units in the method
+            // Invert the graph and get the units into a list.
+
+            InverseGraph invertedGraph = new InverseGraph(graph);
+            List<Unit> invertedUnits = new ArrayList<>();
+            Iterator<Unit> it = invertedGraph.iterator();
+            while (it.hasNext()) {
+                invertedUnits.add(it.next());
+            }
+            Collections.reverse(invertedUnits);
+
+            int index = 0;
+            String unit_str = "";
+//             print IN and OUT sets for each statement
+            for (Unit u : invertedUnits) {
+                System.out.println("Statement: " + u.toString());
+                if (u instanceof InvokeStmt) {
+                    unit_str = u.toString();
+                }
+                if (index == invertedUnits.size()-1) {
+
+                    String methodname = "test";
+                    InSet.put(methodname+unit_str, flowAnalysis.getFlowBefore(u).toString());
+                    OutSet.put(methodname+unit_str, flowAnalysis.getFlowAfter(u).toString());
+                }
+                System.out.println("IN Set: " + flowAnalysis.getFlowBefore(u).toString());
+                System.out.println("OUT Set: " + flowAnalysis.getFlowAfter(u).toString());
+                System.out.println();
+                index++;
+            }
+
+            for(Map.Entry item: InSet.entrySet()){
+                System.out.println("Test Method parameters passed are dependent on");
+                System.out.println("IN Set: " + item);
+                System.out.println("Out Set: " + item);
+            }
+
+            System.out.println("=======================================");
+
+        //FOR loop ends
     }
 
 }

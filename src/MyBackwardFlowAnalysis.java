@@ -26,6 +26,7 @@ public class MyBackwardFlowAnalysis extends BackwardFlowAnalysis<Unit, FlowSet<V
     public MyBackwardFlowAnalysis(UnitGraph g) {
         super(g);
         updateGlobalGraph(g);
+
         doAnalysis();
     }
     @Override
@@ -73,22 +74,10 @@ public class MyBackwardFlowAnalysis extends BackwardFlowAnalysis<Unit, FlowSet<V
         FlowSet inSets = (FlowSet)inSet, outSets = (FlowSet)outSet;
         // Copy the inSet to the outSet
         inSet.copy(outSet);
-        // Kill the definitions of the variables in the current unit
-//        for (ValueBox def : unit.getDefBoxes()) {
-//            if (def.getValue() instanceof Local) {
-//                outSet.remove(def.getValue());
-//            }
-//        }
         for (ValueBox vb : unit.getUseBoxes()) {
             Value v = vb.getValue();
             if (unit instanceof AssignStmt) {
-                if (v instanceof BinopExpr) {
-//                    System.out.println("ValueBox Values is binary: " + vb);
-//                    Value leftOp = ((AssignStmt) unit).getLeftOp();
-//                    System.out.println("Values for left");
-//                    System.out.println(leftOp);
-//                    outSet.remove(leftOp);
-                } else {
+                if (!(v instanceof BinopExpr)) {
                     System.out.println("ValueBox Values is NOT binary: " + vb); //printing how value boxes looks like
                     if (v instanceof Local) {
                         System.out.println("Value for right: " + v);
@@ -107,10 +96,6 @@ public class MyBackwardFlowAnalysis extends BackwardFlowAnalysis<Unit, FlowSet<V
                 // TODO: Handle if statements
             }
         }
-        // Store the IN and OUT flowsets for the current unit
-        //int unitIndex = unitToIndex(unit);
-
-//        inSets.copy(inSet);
         outSets.copy(outSet);
 
     }

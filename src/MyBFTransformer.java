@@ -64,17 +64,21 @@ public class MyBFTransformer extends SceneTransformer {
         SootConditionChecker sootconditionchecker = new SootConditionChecker();
         System.out.println("Methods: " + mainClass.getMethodCount()); // get methods count for class
 
+        for (SootMethod method : mainClass.getMethods()) {
+            System.out.println("Method name: " + method.getName());
+        }
         Map<String,String> InSet = new HashMap<>();
         Map<String,String> OutSet = new HashMap<>();
 
         //To be built: 'FOR' loop to run the below for all the method calls.
-
-            SootMethod m = mainClass.getMethodByName("test"); // get method test from main class
+        for (SootMethod method : mainClass.getMethods()) {
+            String methodname = method.getName();
+            SootMethod m = mainClass.getMethodByName(method.getName()); // get method test from main class
 
             Body b = m.retrieveActiveBody();// get method body as an object
 
             System.out.println("=======================================");
-            System.out.println(m.toString());
+            //System.out.println(m.toString());
 
             UnitGraph graph = new ExceptionalUnitGraph(b);
             MyBackwardFlowAnalysis flowAnalysis = new MyBackwardFlowAnalysis(graph);
@@ -98,11 +102,9 @@ public class MyBFTransformer extends SceneTransformer {
                 if (u instanceof InvokeStmt) {
                     unit_str = u.toString();
                 }
-                if (index == invertedUnits.size()-1) {
-
-                    String methodname = "test";
-                    InSet.put(methodname+unit_str, flowAnalysis.getFlowBefore(u).toString());
-                    OutSet.put(methodname+unit_str, flowAnalysis.getFlowAfter(u).toString());
+                if (index == invertedUnits.size() - 1) {
+                    InSet.put(methodname + unit_str, flowAnalysis.getFlowBefore(u).toString());
+                    OutSet.put(methodname + unit_str, flowAnalysis.getFlowAfter(u).toString());
                 }
                 System.out.println("IN Set: " + flowAnalysis.getFlowBefore(u).toString());
                 System.out.println("OUT Set: " + flowAnalysis.getFlowAfter(u).toString());
@@ -110,14 +112,15 @@ public class MyBFTransformer extends SceneTransformer {
                 index++;
             }
 
-            for(Map.Entry item: InSet.entrySet()){
+            for (Map.Entry item : InSet.entrySet()) {
                 System.out.println("Test Method parameters passed are dependent on");
+                System.out.println(methodname);
                 System.out.println("IN Set: " + item);
                 System.out.println("Out Set: " + item);
             }
 
             System.out.println("=======================================");
-
+        }
         //FOR loop ends
     }
 
